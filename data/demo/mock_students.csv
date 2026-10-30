@@ -1,0 +1,25 @@
+student_id,student_name,school,district,grade_level,gender,recent_attendance,previous_attendance,consecutive_absences,term_average_marks,marks_trend,ubudehe_category,feeding_fee_status,distance_to_school_km,household_climate_impact,prior_grade_repetition
+STU-001,Keza Aline,GS Kigali,Nyarugenge,P6,Female,95.0,94.0,0,78.5,2.0,3,Paid,1.2,None,No
+STU-002,Mugisha David,GS Kigali,Nyarugenge,P5,Male,78.0,91.0,2,52.0,-8.5,2,Partial,2.4,None,No
+STU-003,Uwase Diane,GS Kigali,Nyarugenge,S1,Female,65.0,88.0,4,38.0,-15.0,1,Defaulted,4.5,Urban flash flood,Yes
+STU-004,Ishimwe Eric,GS Gicumbi,Gicumbi,P6,Male,99.0,98.0,0,84.0,1.5,3,Paid,0.8,None,No
+STU-005,Mutoni Grace,GS Gicumbi,Gicumbi,P5,Female,72.0,95.0,5,41.5,-18.0,1,Defaulted,5.6,Landslide / Soil erosion,No
+STU-006,Manzi Jean,GS Huye,Huye,S2,Male,88.0,87.0,1,64.0,-1.0,2,Paid,2.1,None,No
+STU-007,Ingabire Marie,GS Huye,Huye,P6,Female,54.0,80.0,7,34.0,-22.0,1,Defaulted,4.2,Seasonal dry spells,Yes
+STU-008,Habimana Claude,GS Nyagatare,Nyagatare,P4,Male,91.0,90.0,0,72.0,3.0,3,Paid,1.5,None,No
+STU-009,Uwamahoro Chantal,GS Nyagatare,Nyagatare,P6,Female,68.0,85.0,3,44.0,-12.5,1,Defaulted,6.0,Recurrent drought / Dry spells,No
+STU-010,Nshimiyimana Patrick,GS Ngoma,Ngoma,S1,Male,85.0,86.0,1,58.0,-3.0,2,Partial,2.8,None,No
+STU-011,Mukamana Sandrine,GS Ngoma,Ngoma,P5,Female,45.0,75.0,10,29.5,-25.0,1,Defaulted,5.1,Drought / Food stress,Yes
+STU-012,Bizimana Emmanuel,GS Kirehe,Kirehe,P6,Male,92.0,93.0,0,76.0,0.5,3,Paid,1.8,None,No
+STU-013,Tuyishime Samuel,GS Kigali,Nyarugenge,S2,Male,92.0,94.0,0,31.0,-26.0,2,Defaulted,2.2,None,Yes
+STU-014,Nyirahabimana Vestine,GS Rutsiro,Rutsiro,P5,Female,62.0,89.0,4,42.0,-16.0,1,Defaulted,6.8,Landslide / Heavy rainfall,No
+STU-015,Nkurunziza Bosco,GS Rutsiro,Rutsiro,P6,Male,94.0,95.0,0,81.0,4.0,3,Paid,1.5,None,No
+STU-016,Iradukunda Ange,GS Gisagara,Gisagara,P4,Female,58.0,82.0,6,36.5,-19.0,1,Defaulted,5.4,Drought / Food stress,Yes
+STU-017,Kwizera Fabrice,GS Gisagara,Gisagara,P6,Male,89.0,90.0,1,62.0,-2.0,2,Partial,3.0,Drought / Food stress,No
+STU-018,Umulisa Nadège,GS Musanze,Musanze,S1,Female,96.0,95.0,0,87.0,2.0,3,Paid,1.0,None,No
+STU-019,Ndagijimana Alexis,GS Musanze,Musanze,P5,Male,74.0,91.0,3,49.0,-11.0,2,Partial,4.1,Floods / Erosion,No
+STU-020,Uwitonze Christine,GS Rubavu,Rubavu,P6,Female,66.0,86.0,4,40.0,-14.0,1,Defaulted,4.9,Flooding / Volcanic soil erosion,Yes
+STU-021,Niyitegeka Jean Paul,GS Bugesera,Bugesera,S2,Male,71.0,92.0,3,46.0,-15.0,1,Defaulted,5.8,Drought / Water shortage,No
+STU-022,Gasana Kevin,GS Bugesera,Bugesera,P6,Male,93.0,91.0,0,75.0,1.0,3,Paid,1.4,None,No
+STU-023,Mukashyaka Francine,GS Kayonza,Kayonza,P5,Female,59.0,84.0,5,37.0,-18.5,1,Defaulted,6.2,Drought / Pasture shortage,Yes
+STU-024,Twagirayezu Pierre,GS Kayonza,Kayonza,S1,Male,87.0,88.0,1,68.0,0.0,2,Paid,2.5,None,No
