@@ -4,7 +4,7 @@
 
 **Live app:** https://rora-app-ciit.onrender.com
 
-**Watch how it works (demo video):** https://www.youtube.com/watch?v=YOUR_VIDEO_ID
+**Watch how it works (demo video):** https://youtu.be/vTrm9Egufrc
 
 ---
 
@@ -113,6 +113,7 @@ If the app has been idle, the first load may take a short while to wake up. Give
    .\venv\Scripts\Activate.ps1
 ```
    (On macOS/Linux: `source venv/bin/activate`)
+
 2. Start the application:
 ```bash
    streamlit run app.py
