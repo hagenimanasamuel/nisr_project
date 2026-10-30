@@ -1,11 +1,15 @@
-import streamlit as st
-import bcrypt
+"""Authentication and the public landing page for RORA."""
 from pathlib import Path
+
+import bcrypt
+import streamlit as st
 
 BASE_DIR = Path(__file__).parent.parent
 LOGO_PATH = BASE_DIR / "logo.png"
+MAX_FAILED_ATTEMPTS = 5
 
-# Mock accounts with bcrypt-hashed passwords
+# Evaluation accounts. Only bcrypt hashes are stored; credentials are shared
+# privately with evaluators and are never rendered in the interface.
 USERS = {
     "planner": {
         "password_hash": "$2b$12$mPmJ0AQwoAjzFuiyJWMq1uNjJFnJKavvgoeQcSm44bImOWDqMEkr6",
@@ -21,7 +25,6 @@ USERS = {
     },
 }
 
-
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
         return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
@@ -30,76 +33,50 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def login(username: str, password: str):
-    """
-    Validates user credentials against bcrypt hashes.
-    Returns a dict with username and role, or None.
-    """
+    """Returns {"username", "role"} for valid credentials, otherwise None."""
     if not username or not password:
         return None
-    username_key = username.strip().lower()
-    record = USERS.get(username_key)
-    if not record:
-        return None
-    if verify_password(password, record["password_hash"]):
-        return {
-            "username": username_key,
-            "role": record["role"],
-        }
+    key = username.strip().lower()
+    record = USERS.get(key)
+    if record and verify_password(password, record["password_hash"]):
+        return {"username": key, "role": record["role"]}
     return None
 
 
 def get_current_user():
-    """Returns the current authenticated user dict or None."""
     if st.session_state.get("authenticated", False):
         return st.session_state.get("user")
     return None
 
 
 def logout():
-    """Logs out the user and clears session state."""
     st.session_state["authenticated"] = False
     st.session_state["user"] = None
     st.rerun()
 
 
 def render_login_page():
-    """Renders the centered login card."""
-    _, center_col, _ = st.columns([1, 1.4, 1])
-
-    with center_col:
-        st.markdown("<div class='login-card'>", unsafe_allow_html=True)
-
+    _, center, _ = st.columns([1, 1.1, 1])
+    with center:
         if LOGO_PATH.exists():
-            st.image(str(LOGO_PATH), width=180)
+            st.image(str(LOGO_PATH), width=150)
         else:
-            st.markdown("<h2 class='login-title'>RORA</h2>", unsafe_allow_html=True)
-
+            st.markdown("## RORA")
         st.markdown("### Sign in")
-        st.caption("Education data analysis and early intervention system for Rwanda.")
 
+        failed = st.session_state.get("failed_attempts", 0)
         with st.form("login_form", clear_on_submit=False):
-            username_input = st.text_input("Username", placeholder="e.g. planner, school, analyst")
-            password_input = st.text_input("Password", type="password", placeholder="Enter your password")
-            submit_btn = st.form_submit_button("Sign in", use_container_width=True)
+            username_input = st.text_input("Username", autocomplete="username")
+            password_input = st.text_input("Password", type="password", autocomplete="current-password")
+            submitted = st.form_submit_button("Sign in")
 
-            if submit_btn:
-                user_info = login(username_input, password_input)
-                if user_info:
-                    st.session_state["authenticated"] = True
-                    st.session_state["user"] = user_info
+        if submitted:
+            if failed >= MAX_FAILED_ATTEMPTS:
+                st.error("Too many failed attempts. Refresh the page to try again.")
+            else:
+                info = login(username_input, password_input)
+                if info:
+                    st.session_state.update(authenticated=True, user=info, failed_attempts=0)
                     st.rerun()
-                else:
-                    st.error("Invalid username or password. Please check your credentials.")
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown("<div class='credentials-box'>", unsafe_allow_html=True)
-        st.markdown("**Accounts for evaluation**")
-        st.markdown(
-            """
-- **planner** / `planner123` (Role: National Planner)
-- **school** / `school123` (Role: School Staff with intervention form)
-- **analyst** / `analyst123` (Role: Policy Analyst)
-"""
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
+                st.session_state["failed_attempts"] = failed + 1
+                st.error("Invalid username or password.")

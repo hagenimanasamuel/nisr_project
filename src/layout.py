@@ -1,6 +1,10 @@
-import streamlit as st
+"""Shared sidebar for every authenticated page."""
+import os
 from pathlib import Path
-from src.auth import get_current_user, logout, USERS
+
+import streamlit as st
+
+from src.auth import USERS, get_current_user, logout
 
 BASE_DIR = Path(__file__).parent.parent
 LOGO_PATH = BASE_DIR / "logo.png"
@@ -10,93 +14,63 @@ ROLE_TITLES = {
     "school_staff": "School Staff",
     "analyst": "Policy Analyst",
 }
-
 ROLE_SCOPES = {
-    "planner": "National Resource Allocation",
-    "school_staff": "Student Case Management",
-    "analyst": "Multi-Source Analytics & Models",
+    "planner": "National resource allocation",
+    "school_staff": "Student case management",
+    "analyst": "Analytics and model diagnostics",
 }
+SWITCHER_LABELS = {
+    "planner": "National Planner",
+    "analyst": "Policy Analyst",
+    "school": "School Staff",
+}
+
+# Evaluators can preview every role without signing out. Set RORA_ROLE_SWITCHER=0
+# in the environment to disable this for a production deployment.
+ROLE_SWITCHER_ENABLED = os.environ.get("RORA_ROLE_SWITCHER", "1") != "0"
 
 
 def render_sidebar(current_page: str = "Home"):
-    """
-    Renders the unified sidebar across all authenticated pages:
-    - Logo (or text 'RORA' if logo image is missing)
-    - User account info and role badge with specific operational scope
-    - Fast role preview switcher for hackathon judges and evaluators
-    - Role-based navigation links
-    - Logout button
-    """
     user = get_current_user()
-
     with st.sidebar:
-        # Logo handling: fallback to text if logo.png is missing
         if LOGO_PATH.exists():
             st.image(str(LOGO_PATH), width=150)
         else:
             st.markdown("### RORA")
-
         st.caption("NISR Big Data Hackathon 2026")
         st.divider()
 
-        if user:
-            role_key = user.get("role", "")
-            role_display = ROLE_TITLES.get(role_key, role_key.replace("_", " ").title())
-            role_scope = ROLE_SCOPES.get(role_key, "Sector Intelligence")
-            username = user.get("username", "")
+        if not user:
+            return
 
-            # User profile card showing distinct role scope
-            st.markdown(
-                f"""
-                <div class="user-profile-badge">
-                    <div class="user-name">{username}</div>
-                    <div class="user-role">{role_display}</div>
-                    <div style="font-size: 0.72rem; color: #52606D; margin-top: 2px;">Scope: {role_scope}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+        role_key = user.get("role", "")
+        username = user.get("username", "")
+        st.markdown(
+            f'<div class="user-profile-badge"><div class="user-name">{username}</div>'
+            f'<div class="user-role">{ROLE_TITLES.get(role_key, role_key)}</div>'
+            f'<div class="user-scope">{ROLE_SCOPES.get(role_key, "")}</div></div>',
+            unsafe_allow_html=True,
+        )
 
-            st.markdown(
-                "<p style='font-size: 0.8rem; font-weight: 600; color: #52606D; margin-bottom: 0.5rem;'>NAVIGATION</p>",
-                unsafe_allow_html=True,
-            )
+        st.caption("NAVIGATION")
+        st.page_link("app.py", label="Dashboard", icon=":material/dashboard:")
+        st.page_link("pages/2_Early_Intervention.py", label="Early intervention", icon=":material/flag:")
+        st.divider()
 
-            # Navigation links
-            try:
-                st.page_link("app.py", label="District & Systemic Intelligence", icon="📊")
-                st.page_link("pages/2_Early_Intervention.py", label="Early Intervention & Case Management", icon="🎯")
-            except Exception:
-                pass
-
-            st.divider()
-
-            # Fast Role Switcher for Hackathon Evaluation
-            st.markdown(
-                "<p style='font-size: 0.75rem; font-weight: 600; color: #52606D; text-transform: uppercase;'>Switch Role View</p>",
-                unsafe_allow_html=True,
-            )
-            role_options = {
-                "planner": "National Planner (Resource allocation)",
-                "analyst": "Policy Analyst (Model diagnostics)",
-                "school": "School Staff (Student intervention form)",
-            }
-            selected_account = st.selectbox(
-                "Active Account",
-                options=list(role_options.keys()),
-                index=list(role_options.keys()).index(username) if username in role_options else 0,
-                format_func=lambda x: role_options[x],
+        if ROLE_SWITCHER_ENABLED:
+            st.caption("PREVIEW ANOTHER ROLE")
+            keys = list(SWITCHER_LABELS)
+            choice = st.selectbox(
+                "Role preview",
+                keys,
+                index=keys.index(username) if username in keys else 0,
+                format_func=SWITCHER_LABELS.get,
                 label_visibility="collapsed",
             )
-            if selected_account != username:
-                st.session_state["authenticated"] = True
-                st.session_state["user"] = {
-                    "username": selected_account,
-                    "role": USERS[selected_account]["role"],
-                }
+            if choice != username:
+                st.session_state["user"] = {"username": choice, "role": USERS[choice]["role"]}
                 st.rerun()
-
             st.divider()
 
-            if st.button("Log out", use_container_width=True):
-                logout()
+        if st.button("Log out"):
+            logout()
